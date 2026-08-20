@@ -1,85 +1,438 @@
+# 🛒 GoCart — Dockerized E-Commerce Application
+
 <div align="center">
-  <h1><img src="https://gocart-gs.vercel.app/favicon.ico" width="20" height="20" alt="GoCart Favicon">
-   GoCart</h1>
-  <p>
-    An open-source multi-vendor e-commerce platform built with Next.js and Tailwind CSS.
-  </p>
-  <p>
-    <a href="https://github.com/GreatStackDev/goCart/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/GreatStackDev/goCart?style=for-the-badge" alt="License"></a>
-    <a href="https://github.com/GreatStackDev/goCart/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge" alt="PRs Welcome"></a>
-    <a href="https://github.com/GreatStackDev/goCart/issues"><img src="https://img.shields.io/github/issues/GreatStackDev/goCart?style=for-the-badge" alt="GitHub issues"></a>
-  </p>
+
+### A modern multi-vendor e-commerce platform built with Next.js
+
+This project is based on the open-source **GoCart** project by **GreatStackDev** and has been adapted and containerized as part of my DevOps learning and deployment work.
+
 </div>
 
 ---
 
-## 📖 Table of Contents
+## 📌 Project Overview
 
-- [✨ Features](#-features)
-- [🛠️ Tech Stack](#-tech-stack)
-- [🚀 Getting Started](#-getting-started)
-- [🤝 Contributing](#-contributing)
-- [📜 License](#-license)
+**GoCart** is a multi-vendor e-commerce platform built with **Next.js, React, Tailwind CSS, Redux Toolkit, Prisma, and PostgreSQL**.
+
+The application provides separate interfaces for:
+
+* 🛍️ Customers
+* 🏪 Sellers / Store owners
+* 👨‍💼 Administrators
+
+This repository focuses on containerizing and preparing the application for a modern DevOps deployment workflow using **Docker, Docker Compose, Docker Hub, and Kubernetes**.
 
 ---
 
-## Features
+## ✨ Features
 
-- **Multi-Vendor Architecture:** Allows multiple vendors to register, manage their own products, and sell on a single platform.
-- **Customer-Facing Storefront:** A beautiful and responsive user interface for customers to browse and purchase products.
-- **Vendor Dashboards:** Dedicated dashboards for vendors to manage products, view sales analytics, and track orders.
-- **Admin Panel:** A comprehensive dashboard for platform administrators to oversee vendors, products, and commissions.
+### 🛍️ Customer
 
-## 🛠️ Tech Stack <a name="-tech-stack"></a>
+* Browse products
+* View product details
+* Product categories
+* Shopping cart
+* Address management
+* Product ratings and reviews
+* Order management
+* Responsive UI
 
-- **Framework:** Next.js
-- **Styling:** Tailwind CSS
-- **UI Components:** Lucide React for icons
-- **State Management:** Redux Toolkit
+### 🏪 Seller
 
-## 🚀 Getting Started <a name="-getting-started"></a>
+* Seller dashboard
+* Product management
+* Add products
+* Manage product stock
+* View orders
+* Order status management
+* Store information
 
-First, install the dependencies. We recommend using `npm` for this project.
+### 👨‍💼 Admin
+
+* Admin dashboard
+* Store approval
+* Store management
+* Coupon management
+* Sales/order overview
+* Dashboard statistics
+
+---
+
+## 🛠️ Tech Stack
+
+### Application
+
+* **Next.js 15**
+* **React 19**
+* **Tailwind CSS**
+* **Redux Toolkit**
+* **Lucide React**
+* **React Hot Toast**
+* **Recharts**
+
+### Database
+
+* **PostgreSQL**
+* **Prisma ORM**
+
+### DevOps
+
+* **Docker**
+* **Docker Compose**
+* **Docker Hub**
+* **Kubernetes**
+* **Git & GitHub**
+
+---
+
+## 🏗️ Project Architecture
+
+```text
+                    GoCart
+                      │
+             ┌────────┴────────┐
+             │                 │
+          Frontend         Data Layer
+             │                 │
+          Next.js            Prisma
+             │                 │
+          React            PostgreSQL
+             │
+          Redux
+             │
+       ┌─────┼─────┐
+       │     │     │
+    Customer Admin Seller
+```
+
+### Docker Architecture
+
+```text
+                 Docker Compose
+                       │
+                  ┌────▼────┐
+                  │ GoCart   │
+                  │ Next.js  │
+                  │ Node.js  │
+                  └────┬────┘
+                       │
+                    Port 3000
+                       │
+                    Browser
+```
+
+---
+
+## 🐳 Docker
+
+The application is containerized using Docker.
+
+### Dockerfile
+
+The Docker image:
+
+1. Uses Node.js 20 Alpine
+2. Installs dependencies
+3. Copies the application
+4. Builds the Next.js production application
+5. Runs the application as the `node` user
+6. Exposes port `3000`
+
+### Build Docker Image
+
+```bash
+docker build -t gocart .
+```
+
+### Run Docker Container
+
+```bash
+docker run -d -p 3000:3000 --name gocart gocart:latest
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## 🐳 Docker Compose
+
+The project also includes Docker Compose configuration.
+
+Start the application:
+
+```bash
+docker compose up -d --build
+```
+
+Check running services:
+
+```bash
+docker compose ps
+```
+
+View logs:
+
+```bash
+docker compose logs -f gocart
+```
+
+Stop the application:
+
+```bash
+docker compose down
+```
+
+---
+
+## 🐳 Docker Hub
+
+The Docker image can be published to Docker Hub.
+
+Login:
+
+```bash
+docker login
+```
+
+Tag the image:
+
+```bash
+docker tag gocart:latest <YOUR-DOCKERHUB-USERNAME>/gocart:latest
+```
+
+Push the image:
+
+```bash
+docker push <YOUR-DOCKERHUB-USERNAME>/gocart:latest
+```
+
+Pull the image:
+
+```bash
+docker pull <YOUR-DOCKERHUB-USERNAME>/gocart:latest
+```
+
+Run the Docker Hub image:
+
+```bash
+docker run -d -p 3000:3000 <YOUR-DOCKERHUB-USERNAME>/gocart:latest
+```
+
+---
+
+## 🗄️ Database
+
+The project contains a Prisma schema designed for PostgreSQL.
+
+The database models include:
+
+```text
+User
+Product
+Store
+Order
+OrderItem
+Rating
+Address
+Coupon
+```
+
+Prisma schema:
+
+```text
+prisma/schema.prisma
+```
+
+The database connection uses environment variables:
+
+```env
+DATABASE_URL=
+DIRECT_URL=
+```
+
+> ⚠️ Never commit `.env` files containing passwords, database credentials, API keys, or other secrets to GitHub.
+
+---
+
+## 🚀 Local Development
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/AtulTele/Go-Cart-App.git
+cd Go-Cart-App
+```
+
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-Then, run the development server:
+### 3. Configure environment variables
+
+Create a `.env` file:
+
+```env
+DATABASE_URL=your_database_url
+DIRECT_URL=your_direct_database_url
+NEXT_PUBLIC_CURRENCY_SYMBOL=$
+```
+
+### 4. Start development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/(public)/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Outfit](https://vercel.com/font), a new font family for Vercel.
-
----
-
-## 🤝 Contributing <a name="-contributing"></a>
-
-We welcome contributions! Please see our [CONTRIBUTING.md](./CONTRIBUTING.md) for more details on how to get started.
+```text
+http://localhost:3000
+```
 
 ---
 
-## 📜 License <a name="-license"></a>
+## 📁 Project Structure
 
-This project is licensed under the MIT License. See the [LICENSE.md](./LICENSE.md) file for details.
+```text
+Go-Cart-App/
+│
+├── app/
+│   ├── admin/
+│   ├── store/
+│   ├── (public)/
+│   ├── layout.jsx
+│   └── StoreProvider.js
+│
+├── assets/
+│
+├── components/
+│   ├── admin/
+│   └── store/
+│
+├── lib/
+│   ├── store.js
+│   └── features/
+│
+├── prisma/
+│   └── schema.prisma
+│
+├── Dockerfile
+├── docker-compose.yml
+├── package.json
+├── package-lock.json
+├── next.config.mjs
+└── README.md
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🔄 DevOps Workflow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The planned deployment workflow for this project is:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```text
+Developer
+    │
+    ▼
+Git
+    │
+    ▼
+GitHub
+    │
+    ▼
+Docker Build
+    │
+    ▼
+Docker Image
+    │
+    ▼
+Docker Hub
+    │
+    ▼
+Kubernetes
+    │
+    ▼
+GoCart Application
+```
+
+---
+
+# 🙏 Credits & Attribution
+
+This project is based on the open-source **GoCart** project created by **GreatStackDev**.
+
+### Original Repository
+
+**GreatStackDev — GoCart**
+
+https://github.com/GreatStackDev/gocart
+
+The original project provided the foundation for the GoCart e-commerce application, including its application structure, UI, components, and core project implementation.
+
+This repository contains my own work around **Dockerization, Docker Compose, container deployment, DevOps configuration, and deployment preparation**.
+
+Full credit and appreciation to **GreatStackDev** for creating and sharing the original project.
+
+---
+
+## 📜 License
+
+This project follows the license provided by the original GoCart project.
+
+Please see:
+
+```text
+LICENSE.md
+```
+
+for the applicable license and terms.
+
+---
+
+## 👨‍💻 Author
+
+**AtulTele**
+
+GitHub:
+
+https://github.com/AtulTele
+
+---
+
+## ⭐ Acknowledgements
+
+Special thanks to:
+
+**GreatStackDev**
+
+Original GoCart repository:
+
+https://github.com/GreatStackDev/gocart
+
+If you find this project useful for learning Docker, DevOps, or deployment, consider giving the original project and this repository a ⭐.
+
+---
+
+## 📚 Learning Objectives
+
+This project is being used to practice:
+
+* Next.js application deployment
+* Docker image creation
+* Docker container management
+* Docker Compose
+* Docker Hub
+* Git & GitHub
+* Containerized application deployment
+* Kubernetes deployment
+* DevOps CI/CD concepts
+
+---
+
+**Built for learning and DevOps practice.**
